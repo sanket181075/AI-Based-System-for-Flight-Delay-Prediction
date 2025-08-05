@@ -12,8 +12,6 @@ import joblib
 import category_encoders as ce
 from sklearn.preprocessing import StandardScaler
 
-# Assume stratified_df is your dataset loaded before
-
 # 1. Clean data by removing irrelevant columns
 delay_columns = [
     'DELAY_DUE_CARRIER', 'DELAY_DUE_WEATHER', 'DELAY_DUE_NAS',
