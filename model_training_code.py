@@ -12,6 +12,32 @@ import joblib
 import category_encoders as ce
 from sklearn.preprocessing import StandardScaler
 
+file_path = 'C:/Users/SOURABH/Desktop/DBDA/Project/flight_2019_2023_data.csv'
+
+# Load the CSV
+df = pd.read_csv(file_path)
+
+# Convert DELAY_DUE_WEATHER to 'Yes'/'No'
+df['DELAY_DUE_WEATHER_YN'] = df['DELAY_DUE_WEATHER'].apply(lambda x: 'Yes' if pd.notna(x) and x != 0 else 'No')
+
+# Count total records
+total_flights = len(df)
+
+# Count flights delayed due to weather
+weather_delayed_flights = len(df[df['DELAY_DUE_WEATHER_YN'] == 'Yes'])
+
+# Calculate percentage
+weather_delay_percent = (weather_delayed_flights / total_flights) * 100
+
+# Get 'Yes' delayed flights
+weather_delayed = df[df['DELAY_DUE_WEATHER_YN'] == 'Yes']
+
+# Get same number of 'No' (not delayed)
+weather_not_delayed = df[df['DELAY_DUE_WEATHER_YN'] == 'No'].sample(n=len(weather_delayed), random_state=42)
+
+# Combine and shuffle
+stratified_df = pd.concat([weather_delayed, weather_not_delayed]).sample(frac=1, random_state=42).reset_index(drop=True)
+
 # 1. Clean data by removing irrelevant columns
 delay_columns = [
     'DELAY_DUE_CARRIER', 'DELAY_DUE_WEATHER', 'DELAY_DUE_NAS',
